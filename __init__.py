@@ -1,3 +1,4 @@
+import os
 from cudatext import *
 
 try:
@@ -5,8 +6,6 @@ try:
 except:
     ADS = None
     msg_box('NTFS Streams plugin requires Windows', MB_OK+MB_ICONERROR)
-
-st = None
 
 class Command:
     def dialog(self):
@@ -16,7 +15,11 @@ class Command:
             msg_status('NTFS Streams: need named file')
             return
 
-        global st            
+        #handle filename with stream already
+        if ':' in os.path.basename(fn):
+            n = fn.rfind(':')
+            fn = fn[:n]
+
         st = ADS(fn)
 
         ITEMS_TOP = [
@@ -37,8 +40,8 @@ class Command:
             res = dlg_menu(MENU_LIST, items)
             if res is None: return
             res = items[res]
-            print('items:', res)
-            return
+            
+            file_open(st.full_filename(res))
             
         if res==1:
             res = dlg_input('Stream name:', '')
