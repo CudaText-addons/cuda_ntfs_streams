@@ -1,0 +1,12 @@
+[info]
+title=NTFS Streams
+desc=Some description
+type=cudatext-plugin
+subdir=cuda_ntfs_streams
+homepage=
+
+[item2]
+section=commands
+caption=NTFS Streams
+method=dialog
+
