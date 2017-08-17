@@ -8,9 +8,17 @@ except:
     msg_box('NTFS Streams plugin requires Windows', MB_OK+MB_ICONERROR)
 
 class Command:
+
     def dialog(self):
+        self._dialog(ed.get_filename())
+        
+    def dialog_any(self):
+        fn = dlg_file(True, '', '', '')
+        if not fn: return
+        self._dialog(fn)
+
+    def _dialog(self, fn):
         if not ADS: return
-        fn = ed.get_filename()
         if not fn:
             msg_status('NTFS Streams: need named file')
             return
@@ -29,7 +37,7 @@ class Command:
             'Delete stream...'
             ]
                 
-        res = dlg_menu(MENU_LIST, ITEMS_TOP, caption='NTFS Streams')
+        res = dlg_menu(MENU_LIST, ITEMS_TOP, caption='Streams: '+os.path.basename(fn))
         if res is None: return
         
         if res==0:
