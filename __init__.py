@@ -46,16 +46,24 @@ class Command:
         if res==1:
             res = dlg_input('Stream name:', '')
             if not res: return
-            st.add_stream_from_file(None, res)
-            msg_status('Stream added: '+res)
+
+            try:
+                st.add_stream_from_file(None, res)
+                msg_status('Stream added: '+res)
+            except Exception as e:
+                msg_box(str(e), MB_OK+MB_ICONERROR)
             
         if res==2:
             res = dlg_input('Stream name:', '')
             if not res: return
             filename = dlg_file(True, '', '', '')
             if not filename: return
-            st.add_stream_from_file(filename, res)
-            msg_status('Stream added from file: '+res)
+
+            try:
+                st.add_stream_from_file(filename, res)
+                msg_status('Stream added from file: '+res)
+            except Exception as e:
+                msg_box(str(e), MB_OK+MB_ICONERROR)
 
         if res==3:
             if not st.has_streams():
@@ -64,6 +72,11 @@ class Command:
             res = dlg_menu(MENU_LIST, st.streams, caption='Delete stream')
             if res is None: return
             res = st.streams[res]
-            st.delete_stream(res)
-            msg_status('Stream deleted: '+res)
+            
+            try:
+                st.delete_stream(res)
+                msg_status('Stream deleted: '+res)
+            except Exception as e:
+                msg_box(str(e), MB_OK+MB_ICONERROR)
+            
            
