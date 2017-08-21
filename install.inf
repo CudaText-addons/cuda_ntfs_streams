@@ -1,6 +1,6 @@
 [info]
 title=NTFS Streams
-desc=Some description
+desc=Allows to work with NTFS file streams on Windows
 type=cudatext-plugin
 subdir=cuda_ntfs_streams
 homepage=
