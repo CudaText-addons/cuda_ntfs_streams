@@ -23,7 +23,7 @@ class Command:
 
     def dialog(self):
         self._dialog(ed.get_filename())
-        
+
     def dialog_any(self):
         fn = dlg_file(True, '', '', '')
         if not fn: return
@@ -44,14 +44,14 @@ class Command:
 
         ITEMS_TOP = [
             'Open stream (%d items)...'% len(st.streams),
-            'Add empty stream...', 
-            'Add stream from file...', 
+            'Add empty stream...',
+            'Add stream from file...',
             'Delete stream...'
             ]
-                
+
         res = dlg_menu(MENU_LIST, ITEMS_TOP, caption='Streams: '+os.path.basename(fn))
         if res is None: return
-        
+
         if res==0: # open stream
             items = st.streams
             if not items:
@@ -60,30 +60,30 @@ class Command:
             res = dlg_menu(MENU_LIST, items, caption='Open stream in '+os.path.basename(fn))
             if res is None: return
             res = items[res]
-            
+
             file_open(st.full_filename(res))
-            
+
         if res==1: #add empty
             str_name = ask_new_stream_name(st, fn)
             if not str_name: return
-            
+
             try:
                 st.add_stream_from_file(None, str_name)
                 msg_status('Stream added: '+str_name)
             except Exception as e:
                 msg_box(str(e), MB_OK+MB_ICONERROR)
-            
+
         if res==2: #add from file
             filename = dlg_file(True, '', '', '')
             if not filename: return
-            
+
             tt = ADS(filename)
             if tt.has_streams():
                 res = dlg_menu(MENU_LIST, tt.streams+['(unnamed)'], caption='Select stream from source file')
                 if res is None: return
                 if res<len(tt.streams):
                     filename = tt.full_filename(tt.streams[res])
-            
+
             str_name = ask_new_stream_name(st, fn)
             if not str_name: return
 
@@ -100,7 +100,7 @@ class Command:
             res = dlg_menu(MENU_LIST, st.streams, caption='Delete stream')
             if res is None: return
             res = st.streams[res]
-            
+
             #close tab of deleted stream
             prev_name = st.full_filename(res)
             for h in ed_handles():
@@ -108,11 +108,11 @@ class Command:
                 if e.get_filename().lower() == prev_name.lower():
                     e.focus()
                     e.cmd(cmds.cmd_FileClose)
-                
+
             try:
                 st.delete_stream(res)
                 msg_status('Stream deleted: '+res)
             except Exception as e:
                 msg_box(str(e), MB_OK+MB_ICONERROR)
-  
-           
+
+
