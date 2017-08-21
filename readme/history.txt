@@ -1,7 +1,8 @@
 
 2017.08.21
-+ cmd "add stream from file": allow to select stream from source file
-+ cmd "add xxxxx": detect if asked stream exists
++ "add stream from file": allow to select stream from source file
++ "add ...": detect if asked stream name exists
++ "delete stream": also close tab if stream opened
 
 2017.08.17
 initial
