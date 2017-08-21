@@ -1,5 +1,6 @@
 import os
 from cudatext import *
+import cudatext_cmd as cmds
 
 try:
     from .pyads import ADS
@@ -51,7 +52,7 @@ class Command:
         res = dlg_menu(MENU_LIST, ITEMS_TOP, caption='Streams: '+os.path.basename(fn))
         if res is None: return
         
-        if res==0:
+        if res==0: # open stream
             items = st.streams
             if not items:
                 msg_status('No streams')
@@ -62,7 +63,7 @@ class Command:
             
             file_open(st.full_filename(res))
             
-        if res==1:
+        if res==1: #add empty
             str_name = ask_new_stream_name(st, fn)
             if not str_name: return
             
@@ -72,7 +73,7 @@ class Command:
             except Exception as e:
                 msg_box(str(e), MB_OK+MB_ICONERROR)
             
-        if res==2:
+        if res==2: #add from file
             filename = dlg_file(True, '', '', '')
             if not filename: return
             
@@ -92,7 +93,7 @@ class Command:
             except Exception as e:
                 msg_box(str(e), MB_OK+MB_ICONERROR)
 
-        if res==3:
+        if res==3: #delete stream
             if not st.has_streams():
                 msg_status('No streams')
                 return
@@ -100,10 +101,18 @@ class Command:
             if res is None: return
             res = st.streams[res]
             
+            #close tab of deleted stream
+            prev_name = st.full_filename(res)
+            for h in ed_handles():
+                e = Editor(h)
+                if e.get_filename().lower() == prev_name.lower():
+                    e.focus()
+                    e.cmd(cmds.cmd_FileClose)
+                
             try:
                 st.delete_stream(res)
                 msg_status('Stream deleted: '+res)
             except Exception as e:
                 msg_box(str(e), MB_OK+MB_ICONERROR)
-            
+  
            
