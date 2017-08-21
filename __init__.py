@@ -97,12 +97,16 @@ class Command:
             if not st.has_streams():
                 msg_status('No streams')
                 return
-            res = dlg_menu(MENU_LIST, st.streams, caption='Delete stream')
-            if res is None: return
-            res = st.streams[res]
+            str_name = dlg_menu(MENU_LIST, st.streams, caption='Delete stream')
+            if str_name is None: return
+            str_name = st.streams[str_name]
+
+            #confirm
+            if msg_box('Do you want to delete stream "%s" in file "%s"? This cannot be undone.' 
+              % (str_name, os.path.basename(fn)), MB_OK+MB_ICONQUESTION) != ID_OK: return
 
             #close tab of deleted stream
-            prev_name = st.full_filename(res)
+            prev_name = st.full_filename(str_name)
             for h in ed_handles():
                 e = Editor(h)
                 if e.get_filename().lower() == prev_name.lower():
@@ -110,8 +114,8 @@ class Command:
                     e.cmd(cmds.cmd_FileClose)
 
             try:
-                st.delete_stream(res)
-                msg_status('Stream deleted: '+res)
+                st.delete_stream(str_name)
+                msg_status('Stream deleted: '+str_name)
             except Exception as e:
                 msg_box(str(e), MB_OK+MB_ICONERROR)
 
