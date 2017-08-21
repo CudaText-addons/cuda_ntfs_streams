@@ -1,3 +1,7 @@
 
+2017.08.21
++ cmd "add stream from file": allow to select stream from source file
++ cmd "add xxxxx": detect if asked stream exists
+
 2017.08.17
 initial

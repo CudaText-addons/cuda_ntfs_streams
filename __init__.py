@@ -7,6 +7,17 @@ except:
     ADS = None
     msg_box('NTFS Streams plugin requires Windows', MB_OK+MB_ICONERROR)
 
+
+def ask_new_stream_name(st, filename):
+    while True:
+        s = dlg_input('Add stream in "%s":' % os.path.basename(filename), '')
+        if not s: return
+        if s in st.streams:
+            msg_box('Stream name "%s" already exists'%s, MB_OK+MB_ICONWARNING)
+        else:
+            return s
+
+
 class Command:
 
     def dialog(self):
@@ -45,31 +56,39 @@ class Command:
             if not items:
                 msg_status('No streams')
                 return
-            res = dlg_menu(MENU_LIST, items)
+            res = dlg_menu(MENU_LIST, items, caption='Open stream in '+os.path.basename(fn))
             if res is None: return
             res = items[res]
             
             file_open(st.full_filename(res))
             
         if res==1:
-            res = dlg_input('Stream name:', '')
-            if not res: return
-
+            str_name = ask_new_stream_name(st, fn)
+            if not str_name: return
+            
             try:
-                st.add_stream_from_file(None, res)
-                msg_status('Stream added: '+res)
+                st.add_stream_from_file(None, str_name)
+                msg_status('Stream added: '+str_name)
             except Exception as e:
                 msg_box(str(e), MB_OK+MB_ICONERROR)
             
         if res==2:
-            res = dlg_input('Stream name:', '')
-            if not res: return
             filename = dlg_file(True, '', '', '')
             if not filename: return
+            
+            tt = ADS(filename)
+            if tt.has_streams():
+                res = dlg_menu(MENU_LIST, tt.streams+['(unnamed)'], caption='Select stream from source file')
+                if res is None: return
+                if res<len(tt.streams):
+                    filename = tt.full_filename(tt.streams[res])
+            
+            str_name = ask_new_stream_name(st, fn)
+            if not str_name: return
 
             try:
-                st.add_stream_from_file(filename, res)
-                msg_status('Stream added from file: '+res)
+                st.add_stream_from_file(filename, str_name)
+                msg_status('Stream added from file: '+os.path.basename(filename))
             except Exception as e:
                 msg_box(str(e), MB_OK+MB_ICONERROR)
 
