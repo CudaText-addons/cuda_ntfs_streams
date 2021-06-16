@@ -49,7 +49,7 @@ class Command:
             'Delete stream...'
             ]
 
-        res = dlg_menu(MENU_LIST, ITEMS_TOP, caption='Streams: '+os.path.basename(fn))
+        res = dlg_menu(DMENU_LIST, ITEMS_TOP, caption='Streams: '+os.path.basename(fn))
         if res is None: return
 
         if res==0: # open stream
@@ -57,7 +57,7 @@ class Command:
             if not items:
                 msg_status('No streams')
                 return
-            res = dlg_menu(MENU_LIST, items, caption='Open stream in '+os.path.basename(fn))
+            res = dlg_menu(DMENU_LIST, items, caption='Open stream in '+os.path.basename(fn))
             if res is None: return
             res = items[res]
 
@@ -79,7 +79,7 @@ class Command:
 
             tt = ADS(filename)
             if tt.has_streams():
-                res = dlg_menu(MENU_LIST, tt.streams+['(unnamed)'], caption='Select stream from source file')
+                res = dlg_menu(DMENU_LIST, tt.streams+['(unnamed)'], caption='Select stream from source file')
                 if res is None: return
                 if res<len(tt.streams):
                     filename = tt.full_filename(tt.streams[res])
@@ -97,7 +97,7 @@ class Command:
             if not st.has_streams():
                 msg_status('No streams')
                 return
-            str_name = dlg_menu(MENU_LIST, st.streams, caption='Delete stream')
+            str_name = dlg_menu(DMENU_LIST, st.streams, caption='Delete stream')
             if str_name is None: return
             str_name = st.streams[str_name]
 
